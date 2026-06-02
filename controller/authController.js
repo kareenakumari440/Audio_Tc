@@ -2,33 +2,37 @@
 
 //  logic 
 
-const User = require('../model/user')
+const user = require('../model/user')
+const bcrypt = require('bcrypt')
 const register = async(req , res)=>{
 
 try {
       
 // step 1:  user get  name email password
-  const{name  , email , body } =    req.body;
-
+  const{name  , email ,  passwords } =    req.body;
+console.log("bodayy  " ,req.body )
 
 // step 2 :  email se cheack register 
 
-          const existingUser=     await User.findOne({email})
+          const existingUser=     await user.findOne({ "email":email})
 
+          console.log(existingUser)
           if(existingUser){
-            return res.status(400).Json({
+            return res.status(400).json({
                 message : " found "
             })
           }
 
 //  step 3:  password hash  bycript 
-// const hashPassword = ??
-//  strep 4 :  save data base me
+let hashPassword =  await  bcrypt.hash(passwords ,10)
+//  step 4 :  save data base me
 
-const  user = await User.create({
-    name , email , password
+const  users = await user.create({
+    name , email ,  passwords: hashPassword
 })
-
+res.status(200).json({
+message : " database me done"
+})
 
 
 } catch (error) {
@@ -37,3 +41,5 @@ const  user = await User.create({
 
 
 }
+
+module.exports = register;
