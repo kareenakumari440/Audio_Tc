@@ -7,7 +7,7 @@ const protectedRoute = ( req, res, next)=>{
 console.log(  "token value ", token)
 
 if(!token ){
-    res.status(404).json({
+    return res.status(404).json({
         message: "not found"
     })
 }
